@@ -1,0 +1,35 @@
+<!-- newsletter popup -->
+<div class="blockpopup_custom">
+	<div class="blockpopup_custom_content">
+		<p class="sub_title">{$result.subtitle}</p>
+		<h4 class="title">{$result.title}</h4>
+		<p class="content">{$result.description}</p>
+		<div class="newsletter_popup_bottom"> 
+			<input type="checkbox" id="newsletter_popup_dont_show_again">
+			<label for="newsletter_popup_dont_show_again">{l s='Don\'t show this popup again' mod='thnxblockpopup'}</label>
+		</div>
+	</div>
+</div>
+{thnxblockpopup_js name="thnxblockpopupc_{$result.id_thnxblckpopuptbl}"}
+<script type="text/javascript">
+	$(document).ready(function($){
+		$("#newsletter_popup_dont_show_again").on("click",function(){
+			var data = {
+				'action_type':'dontshow',
+				'id_newsletter':{$result.id_thnxblckpopuptbl}
+			};
+			$.ajax({
+				url: thnx_base_dir + 'modules/thnxblockpopup/ajax.php',
+				data: data,
+				dataType: 'json',
+				success: function(result){
+		        	// $(".fancybox-close").trigger("click");
+		        	if(!!$.prototype.magnificPopup){
+		        		$.magnificPopup.close();
+		        	}
+				}
+			});
+		});
+	});
+</script>
+{/thnxblockpopup_js}

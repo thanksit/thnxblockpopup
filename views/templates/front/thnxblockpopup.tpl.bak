@@ -1,0 +1,57 @@
+{if !empty($results)}
+	{foreach from=$results item=result}
+		<div id="thnxblockpopup_{$result.id_thnxblckpopuptbl}" class="thnxblockpopup white-popup mfp-hide" style="background-image:url({$modules_dir}thnxblockpopup/img/{$result.image}); max-width: {$result.width|intval}px; min-height: {$result.height|intval}px;">
+			<div class="thnxblockpopup_content">
+				{if $result.popuptype == 'newsletter'}
+					{include file="module:thnxblockpopup/views/templates/front/newsletter_popup.tpl"}
+				{/if}
+				{if $result.popuptype == 'custom'}
+					{include file="module:thnxblockpopup/views/templates/front/blockpopup_custom.tpl"}
+				{/if}
+			</div>
+		</div>
+{thnxblockpopup_js name="thnxblockpopupp_{$result.id_thnxblckpopuptbl}"}
+		{literal}
+		<script type="text/javascript">
+			jQuery(document).ready(function($){
+				if ($(document.body).width() > 767){
+					var popupWidth = parseInt({/literal}{$result.width|intval}{literal});
+					var popupHeight = parseInt({/literal}{$result.height|intval}{literal});
+					if (!!$.prototype.magnificPopup)
+					$.magnificPopup.open({
+						items: {
+						    src: '#thnxblockpopup_{/literal}{$result.id_thnxblckpopuptbl}{literal}',
+						    type: 'inline'
+						  },
+						// mainClass: 'mfp-move-from-top',
+					});
+
+				};
+			});
+		</script>
+		{/literal}
+{/thnxblockpopup_js}
+	{/foreach}
+{/if}
+
+
+{* if (!!$.prototype.fancybox){
+$.fancybox.open($('#thnxblockpopup_{/literal}{$result.id_thnxblckpopuptbl}{literal}'), {
+	padding: 0,
+	margin: 0,
+	titleShow     : false,
+	openEffect	:	'fade',
+	closeEffect	:	'fade',
+	transitionIn	:	'none',
+	transitionOut	:	'none',
+	fitToView: false, //
+	autoResize: true,
+    maxWidth: "90%", // 
+	width: popupWidth, 
+	height: popupHeight,
+    // type: 'html',
+    autoSize: false,
+    scrolling: false
+	// 'speedIn'		:	600, 
+	// 'speedOut'		:	200, 
+}); *}
