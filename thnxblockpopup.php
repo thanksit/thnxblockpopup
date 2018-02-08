@@ -196,8 +196,7 @@ class ThnxBlockPopUp extends Module
         $save_tab_id = $this->RegisterParentTabs();
         require_once(dirname(__FILE__) .$this->tabs_files_url);
         if (isset($tabs_lists) && !empty($tabs_lists)) {
-            foreach ($tabs_lists as $tab_list)
-            {
+            foreach ($tabs_lists as $tab_list) {
                 $tab_listobj = new Tab();
                 $tab_listobj->class_name = $tab_list['class_name'];
                 $tab_listobj->id_parent = $save_tab_id;
