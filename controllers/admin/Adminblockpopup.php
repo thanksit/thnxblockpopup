@@ -15,9 +15,9 @@ class AdminblockpopupController extends ModuleAdminController
         $this->allow_export = false;
         $this->_defaultOrderWay = 'DESC';
         $this->bootstrap = true;
-            if (Shop::isFeatureActive()) {
-                Shop::addTableAssociation($this->table, array('type' => 'shop'));
-            }
+        if (Shop::isFeatureActive()) {
+            Shop::addTableAssociation($this->table, array('type' => 'shop'));
+        }
             parent::__construct();
         $this->fields_list = array(
             'id_thnxblckpopuptbl' => array(
@@ -56,7 +56,7 @@ class AdminblockpopupController extends ModuleAdminController
     public function init()
     {
         parent::init();
-        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'thnxblckpopuptbl_shop sbp ON a.id_thnxblckpopuptbl=sbp.id_thnxblckpopuptbl && sbp.id_shop IN('.implode(',',Shop::getContextListShopID()).')';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'thnxblckpopuptbl_shop sbp ON a.id_thnxblckpopuptbl=sbp.id_thnxblckpopuptbl && sbp.id_shop IN('.implode(',', Shop::getContextListShopID()).')';
         $this->_select = 'sbp.id_shop';
         $this->_defaultOrderBy = 'a.position';
         $this->_defaultOrderWay = 'DESC';
@@ -82,10 +82,11 @@ class AdminblockpopupController extends ModuleAdminController
                 WHERE pl.`id_lang` = '.(int)$id_lang.' ORDER BY pl.`name`';
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         $id_lang = Context::getContext()->language->id;
-        $categories =  Category::getCategories($id_lang,true,false);
+        $categories =  Category::getCategories($id_lang, true, false);
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
-        if (isset($controllers))
+        if (isset($controllers)) {
             ksort($controllers);
+        }
         $Manufacturers =  Manufacturer::getManufacturers();
         $Suppliers =  Supplier::getSuppliers();
         $rslt = array();
@@ -106,7 +107,7 @@ class AdminblockpopupController extends ModuleAdminController
                 $i++;
             }
         }
-        if (isset($Suppliers)) {}
+        if (isset($Suppliers)) {
             foreach ($Suppliers as $r) {
                 $rslt[$i]['id'] = 'sup_'.$r['id_supplier'];
                 $rslt[$i]['name'] = 'Supplier : '.$r['name'];
@@ -193,10 +194,9 @@ class AdminblockpopupController extends ModuleAdminController
         $results = Db::getInstance()->executeS($sql);
         if (isset($results) && !empty($results)) {
             $i = 0;
-            foreach ($results as $result)
-            {
+            foreach ($results as $result) {
               $image_type_val[$i]['id'] = $result['name'];
-              $image_type_val[$i]['name'] = ucwords(str_replace("_"," ",$result['name']));
+              $image_type_val[$i]['name'] = ucwords(str_replace("_", " ", $result['name']));
               $i++;
             }
         }
