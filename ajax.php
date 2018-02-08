@@ -16,15 +16,15 @@ if ($action == 'dontshow') {
         die(Tools::jsonEncode(array("msg" => $thnxblockpopup->error)));
     }
 }
-function DontShowFunc() {
+function DontShowFunc()
+{
     $context = Context::getcontext();
     $id_newsletter = (int)Tools::getValue('id_newsletter');
     $blockpopupclass = new blockpopupclass($id_newsletter);
     $id_customer = (int)$context->cart->id_customer;
     $id_guest = (int)$context->cart->id_guest;
-
     if ($id_customer != 0) {
-        $id = 'c_'.$id_customer;        
+        $id = 'c_'.$id_customer;
     } else {
         $id = 'g_'.$id_guest;       
     }
@@ -39,8 +39,7 @@ function DontShowFunc() {
     }
     $blockpopupclass->dontshow = $dontshow;
 
-    if ($blockpopupclass->update())
-    {
+    if ($blockpopupclass->update()) {
         return true;
     } else {
         return false;
