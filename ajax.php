@@ -26,10 +26,10 @@ function DontShowFunc()
     if ($id_customer != 0) {
         $id = 'c_'.$id_customer;
     } else {
-        $id = 'g_'.$id_guest;       
+        $id = 'g_'.$id_guest;
     }
     if (isset($blockpopupclass->dontshow) && !empty($blockpopupclass->dontshow)) {
-        $dontshow = explode(",",$blockpopupclass->dontshow);
+        $dontshow = explode(",", $blockpopupclass->dontshow);
         if (!in_array($id, $dontshow)) {
             $dontshow[] = $id;
         }
