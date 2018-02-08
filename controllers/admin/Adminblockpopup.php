@@ -502,7 +502,7 @@ class AdminblockpopupController extends ModuleAdminController
                 }
             }
         }
-      $blockpopupclass = new blockpopupclass($id_thnxblckpopuptbl);
+        $blockpopupclass = new blockpopupclass($id_thnxblckpopuptbl);
         if (Validate::isLoadedObject($blockpopupclass)) {
             if (isset($position) && $blockpopupclass->updatePosition($way, $position)) {
                 Hook::exec('action'.$this->className.'Update');
