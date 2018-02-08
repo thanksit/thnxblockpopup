@@ -513,4 +513,5 @@ class AdminblockpopupController extends ModuleAdminController
         } else {
                 die('{"hasError" : true, "errors" : "This blockpopupclass can not be loaded"}');
             }
+    }
 }
