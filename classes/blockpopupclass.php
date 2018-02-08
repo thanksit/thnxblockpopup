@@ -130,8 +130,7 @@ class BlockPopUpClass extends ObjectModel
         if (!$res = Db::getInstance()->executeS('
             SELECT `id_thnxblckpopuptbl`, `position`
             FROM `'._DB_PREFIX_.'thnxblckpopuptbl`
-            ORDER BY `position` ASC'
-        )) {
+            ORDER BY `position` ASC')) {
             return false;
         }
         if (!empty($res)) {
