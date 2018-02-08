@@ -98,14 +98,17 @@ class ThnxBlockPopUp extends Module
     public function UnRegister_Hooks()
     {
         $hook_id = Hook::getIdByName("displayBeforeBodyClosingTag");
-            if (isset($hook_id) && !empty($hook_id))
-                $this->unregisterHook((int)$hook_id);
+        if (isset($hook_id) && !empty($hook_id)) {
+            $this->unregisterHook((int)$hook_id);
+        }
         $hook_id2 = Hook::getIdByName("displayHeader");
-            if (isset($hook_id2) && !empty($hook_id2))
-                $this->unregisterHook((int)$hook_id2);
+        if (isset($hook_id2) && !empty($hook_id2)) {
+            $this->unregisterHook((int)$hook_id2);
+        }
         $hook_id3 = Hook::getIdByName("displayfooter");
-            if (isset($hook_id3) && !empty($hook_id3))
-                $this->unregisterHook((int)$hook_id3);
+        if (isset($hook_id3) && !empty($hook_id3)) {
+            $this->unregisterHook((int)$hook_id3);
+        }
         return true;
     }
     public function Register_SQL()
@@ -113,11 +116,12 @@ class ThnxBlockPopUp extends Module
         $querys = array();
         if (file_exists(dirname(__FILE__).$this->mysql_files_url)) {
             require_once(dirname(__FILE__).$this->mysql_files_url);
-            if (isset($querys) && !empty($querys))
+            if (isset($querys) && !empty($querys)) {
                 foreach ($querys as $query) {
                     if (!Db::getInstance()->Execute($query,false))
                         return false;
                 }
+            }
         }
         return true;
     }
@@ -126,11 +130,12 @@ class ThnxBlockPopUp extends Module
         $querys_u = array();
         if (file_exists(dirname(__FILE__).$this->mysql_files_url)) {
             require_once(dirname(__FILE__).$this->mysql_files_url);
-            if (isset($querys_u) && !empty($querys_u))
+            if (isset($querys_u) && !empty($querys_u)) {
                 foreach ($querys_u as $query_u) {
                     if (!Db::getInstance()->Execute($query_u,false))
                         return false;
                 }
+            }
         }
         return true;
     }
@@ -171,14 +176,14 @@ class ThnxBlockPopUp extends Module
             $tab_listobj->class_name = 'Adminthnxthemedashboard';
             $tab_listobj->id_parent = $adminmodules_id;
             $tab_listobj->module = $this->name;
-            foreach ($langs as $l)
-            {
+            foreach ($langs as $l) {
                 $tab_listobj->name[$l['id_lang']] = $this->l("Theme Settings");
             }
-            if ($tab_listobj->save())
+            if ($tab_listobj->save()) {
                 return (int)$tab_listobj->id;
-            else
+            } else {
                 return (int)$adminmodules_id;
+            }
         }
     }
     public function Register_Tabs()
@@ -188,7 +193,7 @@ class ThnxBlockPopUp extends Module
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         $save_tab_id = $this->RegisterParentTabs();
         require_once(dirname(__FILE__) .$this->tabs_files_url);
-        if (isset($tabs_lists) && !empty($tabs_lists))
+        if (isset($tabs_lists) && !empty($tabs_lists)) {
             foreach ($tabs_lists as $tab_list)
             {
                 $tab_listobj = new Tab();
@@ -199,12 +204,12 @@ class ThnxBlockPopUp extends Module
                 } else {
                     $tab_listobj->module = $this->name;
                 }
-                foreach ($langs as $l)
-                {
+                foreach ($langs as $l) {
                     $tab_listobj->name[$l['id_lang']] = $this->l($tab_list['name']);
                 }
                 $tab_listobj->save();
             }
+        }
         return true;
     }
     public function _prepareHook()
@@ -218,55 +223,49 @@ class ThnxBlockPopUp extends Module
     }
     public function newsletterRegistration()
     {
-        if (empty($_POST['email']) || !Validate::isEmail($_POST['email']))
+        if (empty($_POST['email']) || !Validate::isEmail($_POST['email'])) {
             return $this->error = $this->l('Invalid email address.');
-        else if ($_POST['action'] == '1')
-        {
+        }
+        else if ($_POST['action'] == '1') {
             $register_status = $this->isNewsletterRegistered($_POST['email']);
-
-            if ($register_status < 1)
+            if ($register_status < 1) {
                 return $this->error = $this->l('This email address is not registered.');
-
-            if (!$this->unregister($_POST['email'], $register_status))
+            }
+            if (!$this->unregister($_POST['email'], $register_status)) {
                 return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
-
+            }
             return $this->valid = $this->l('Unsubscription successful.');
         }
         /* Subscription */
-        else if ($_POST['action'] == '0')
-        {
+        else if ($_POST['action'] == '0') {
             $register_status = $this->isNewsletterRegistered($_POST['email']);
-            if ($register_status > 0)
+            if ($register_status > 0) {
                 return $this->error = $this->l('This email address is already registered.');
-
+            }
             $email = pSQL($_POST['email']);
-            if (!$this->isRegistered($register_status))
-            {
-                if (Configuration::get('NW_VERIFICATION_EMAIL'))
-                {
+            if (!$this->isRegistered($register_status)) {
+                if (Configuration::get('NW_VERIFICATION_EMAIL')) {
                     // create an unactive entry in the newsletter database
-                    if ($register_status == self::GUEST_NOT_REGISTERED)
+                    if ($register_status == self::GUEST_NOT_REGISTERED) {
                         $this->registerGuest($email, false);
-
-                    if (!$token = $this->getToken($email, $register_status))
+                    }
+                    if (!$token = $this->getToken($email, $register_status)) {
                         return $this->error = $this->l('An error occurred during the subscription process.');
-
+                    }
                     $this->sendVerificationEmail($email, $token);
-
                     return $this->valid = $this->l('A verification email has been sent. Please check your inbox.');
-                }
-                else
-                {
-                    if ($this->register($email, $register_status))
+                } else {
+                    if ($this->register($email, $register_status)) {
                         $this->valid = $this->l('You have successfully subscribed to this newsletter.');
-                    else
+                    } else {
                         return $this->error = $this->l('An error occurred during the subscription process.');
-
-                    if ($code = Configuration::get('NW_VOUCHER_CODE'))
+                    }
+                    if ($code = Configuration::get('NW_VOUCHER_CODE')) {
                         $this->sendVoucher($email, $code);
-
-                    if (Configuration::get('NW_CONFIRMATION_EMAIL'))
+                    }
+                    if (Configuration::get('NW_CONFIRMATION_EMAIL')) {
                         $this->sendConfirmationEmail($email);
+                    }
                 }
             }
         }
@@ -285,32 +284,32 @@ class ThnxBlockPopUp extends Module
                 WHERE `email` = \''.pSQL($customer_email).'\'
                 AND id_shop = '.$this->context->shop->id;
 
-        if (Db::getInstance()->getRow($sql))
+        if (Db::getInstance()->getRow($sql)) {
             return self::GUEST_REGISTERED;
-
+        }
         $sql = 'SELECT `newsletter`
                 FROM '._DB_PREFIX_.'customer
                 WHERE `email` = \''.pSQL($customer_email).'\'
                 AND id_shop = '.$this->context->shop->id;
 
-        if (!$registered = Db::getInstance()->getRow($sql))
-            return self::GUEST_NOT_REGISTERED;
-
-        if ($registered['newsletter'] == '1')
+        if (!$registered = Db::getInstance()->getRow($sql)) {
+            return self::GUEST_NOT_REGISTERED; 
+        }
+        if ($registered['newsletter'] == '1') {
             return self::CUSTOMER_REGISTERED;
-
+        }
         return self::CUSTOMER_NOT_REGISTERED;
     }
     public function unregister($email, $register_status)
     {
-        if ($register_status == self::GUEST_REGISTERED)
+        if ($register_status == self::GUEST_REGISTERED) {
             $sql = 'DELETE FROM '._DB_PREFIX_.'emailsubscription WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
-        else if ($register_status == self::CUSTOMER_REGISTERED)
+        } else if ($register_status == self::CUSTOMER_REGISTERED) {
             $sql = 'UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->id;
-
-        if (!isset($sql) || !Db::getInstance()->execute($sql))
+        }
+        if (!isset($sql) || !Db::getInstance()->execute($sql)) {
             return false;
-
+        }
         return true;
     }
     public function registerGuest($email, $active = true)
@@ -335,12 +334,12 @@ class ThnxBlockPopUp extends Module
     }
     public function register($email, $register_status)
     {
-        if ($register_status == self::GUEST_NOT_REGISTERED)
+        if ($register_status == self::GUEST_NOT_REGISTERED) {
             return $this->registerGuest($email);
-
-        if ($register_status == self::CUSTOMER_NOT_REGISTERED)
+        }
+        if ($register_status == self::CUSTOMER_NOT_REGISTERED) {
             return $this->registerUser($email);
-
+        }
         return false;
     }
     public function registerUser($email)
@@ -354,15 +353,12 @@ class ThnxBlockPopUp extends Module
     }
     public function getToken($email, $register_status)
     {
-        if (in_array($register_status, array(self::GUEST_NOT_REGISTERED, self::GUEST_REGISTERED)))
-        {
+        if (in_array($register_status, array(self::GUEST_NOT_REGISTERED, self::GUEST_REGISTERED))) {
             $sql = 'SELECT MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) as token
                     FROM `'._DB_PREFIX_.'emailsubscription`
                     WHERE `active` = 0
                     AND `email` = \''.pSQL($email).'\'';
-        }
-        else if ($register_status == self::CUSTOMER_NOT_REGISTERED)
-        {
+        } else if ($register_status == self::CUSTOMER_NOT_REGISTERED) {
             $sql = 'SELECT MD5(CONCAT( `email` , `date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\' )) as token
                     FROM `'._DB_PREFIX_.'customer`
                     WHERE `newsletter` = 0
@@ -417,8 +413,9 @@ class ThnxBlockPopUp extends Module
     }
     public static function PageException($exceptions = NULL)
     {
-        if ($exceptions == NULL)
+        if ($exceptions == NULL) {
             return false;
+        }
         $exceptions = explode(",",$exceptions);
         $page_name = Context::getContext()->controller->php_self;
         $this_arr = array();
@@ -437,8 +434,7 @@ class ThnxBlockPopUp extends Module
                 '.Shop::addSqlAssociation('category', 'c').'
                 WHERE cp.`id_product` = '.(int)$id_product;
             $prd_catresults = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($prd_cat_sql);
-            if (isset($prd_catresults) && !empty($prd_catresults))
-            {
+            if (isset($prd_catresults) && !empty($prd_catresults)) {
                 foreach ($prd_catresults as $prd_catresult)
                 {
                     $this_arr[] = 'prdcat_'.$prd_catresult['id'];
@@ -448,10 +444,8 @@ class ThnxBlockPopUp extends Module
             // Start Get Product Manufacturer
             $prd_man_sql = 'SELECT `id_manufacturer` AS id FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product;
             $prd_manresults = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($prd_man_sql);
-            if (isset($prd_manresults) && !empty($prd_manresults))
-            {
-                foreach ($prd_manresults as $prd_manresult)
-                {
+            if (isset($prd_manresults) && !empty($prd_manresults)) {
+                foreach ($prd_manresults as $prd_manresult) {
                     $this_arr[] = 'prdman_'.$prd_manresult['id'];
                 }
             }
@@ -459,10 +453,8 @@ class ThnxBlockPopUp extends Module
             // Start Get Product SupplierS
             $prd_sup_sql = "SELECT `id_supplier` AS id FROM `"._DB_PREFIX_."product_supplier` WHERE `id_product` = ".(int)$id_product." GROUP BY `id_supplier`";
             $prd_supresults = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($prd_sup_sql);
-            if (isset($prd_supresults) && !empty($prd_supresults))
-            {
-                foreach ($prd_supresults as $prd_supresult)
-                {
+            if (isset($prd_supresults) && !empty($prd_supresults)) {
+                foreach ($prd_supresults as $prd_supresult) {
                     $this_arr[] = 'prdsup_'.$prd_supresult['id'];
                 }
             }
@@ -505,7 +497,7 @@ class ThnxBlockPopUp extends Module
             $theme_name = $this->context->shop->theme_name;
             $page_name = $this->context->controller->php_self;
             $root_path = _PS_ROOT_DIR_.'/';
-            foreach ($this->css_files as $css_file):
+            foreach ($this->css_files as $css_file) :
                 if (isset($css_file['key']) && !empty($css_file['key']) && isset($css_file['src']) && !empty($css_file['src'])) {
                     $media = (isset($css_file['media']) && !empty($css_file['media'])) ? $css_file['media'] : 'all';
                     $priority = (isset($css_file['priority']) && !empty($css_file['priority'])) ? $css_file['priority'] : 50;
@@ -539,7 +531,7 @@ class ThnxBlockPopUp extends Module
             $theme_name = $this->context->shop->theme_name;
             $page_name = $this->context->controller->php_self;
             $root_path = _PS_ROOT_DIR_.'/';
-            foreach ($this->js_files as $js_file):
+            foreach ($this->js_files as $js_file) :
                 if (isset($js_file['key']) && !empty($js_file['key']) && isset($js_file['src']) && !empty($js_file['src'])) {
                     $position = (isset($js_file['position']) && !empty($js_file['position'])) ? $js_file['position'] : 'bottom';
                     $priority = (isset($js_file['priority']) && !empty($js_file['priority'])) ? $js_file['priority'] : 50;
