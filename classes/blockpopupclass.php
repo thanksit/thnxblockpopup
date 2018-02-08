@@ -89,7 +89,8 @@ class BlockPopUpClass extends ObjectModel
         }
         return true;
     }
-    public function processImage($FILES) {
+    public function processImage($FILES)
+    {
         if (isset($FILES['image']) && isset($FILES['image']['tmp_name']) && !empty($FILES['image']['tmp_name'])) {
                 $ext = substr($FILES['image']['name'], strrpos($FILES['image']['name'], '.') + 1);
                 $id = time();
