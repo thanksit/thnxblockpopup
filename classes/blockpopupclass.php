@@ -96,11 +96,11 @@ class BlockPopUpClass extends ObjectModel
                 $id = time();
                 $file_name = $id . '.' . $ext;
                 $path = _PS_MODULE_DIR_ .'thnxblockpopup/img/' . $file_name;
-                if (!move_uploaded_file($FILES['image']['tmp_name'], $path)) {
-                    return false;      
-                } else {
-                    return $file_name;
-                }
+            if (!move_uploaded_file($FILES['image']['tmp_name'], $path)) {
+                return false;
+            } else {
+                return $file_name;
+            }
         } else {
             return false;
         }
@@ -136,12 +136,14 @@ class BlockPopUpClass extends ObjectModel
         }
         if (!empty($res)) {
             foreach ($res as $thnxblckpopuptbl) {
-                if ((int)$thnxblckpopuptbl['id_thnxblckpopuptbl'] == (int)$this->id)
+                if ((int)$thnxblckpopuptbl['id_thnxblckpopuptbl'] == (int)$this->id) {
+                    $moved_thnxblckpopuptbl = $thnxblckpopuptbl;
+                }
             }
-            $moved_thnxblckpopuptbl = $thnxblckpopuptbl;
         }
-        if (!isset($moved_thnxblckpopuptbl) || !isset($position))
+        if (!isset($moved_thnxblckpopuptbl) || !isset($position)) {
             return false;
+        }
         $queryx = ' UPDATE `'._DB_PREFIX_.'thnxblckpopuptbl`
         SET `position`= `position` '.($way ? '- 1' : '+ 1').'
         WHERE `position`
@@ -232,14 +234,16 @@ class BlockPopUpClass extends ObjectModel
                INNER JOIN `'._DB_PREFIX_.'thnxblckpopuptbl_shop` pbs ON (pb.`id_thnxblckpopuptbl` = pbs.`id_thnxblckpopuptbl` AND pbs.`id_shop` = '.$id_shop.')
                ';
         $sql .= ' WHERE pb.`active` = 1 AND pb.fromdate <= "'.$date.'" AND pb.todate >= "'.$date.'" ';
-        if ($id_customer != 0)
+        if ($id_customer != 0) {
             $sql .= ' AND pb.iscustomer = 1 ';
-        if ($id_guest != 0 && $id_customer == 0)
+        }
+        if ($id_guest != 0 && $id_customer == 0) {
             $sql .= ' AND pb.isguest = 1 ';
+        }
         $sql .= ' ORDER BY pb.`position` ASC ';
         return Db::getInstance()->executeS($sql);
     }
-    public static function GetIndividualItem($items=null, $pref=null, $string=false)
+    public static function GetIndividualItem($items = null, $pref = null, $string = false)
     {
         if ($pref == null) {
             return false;
@@ -258,9 +262,10 @@ class BlockPopUpClass extends ObjectModel
             }
             $results_str = implode(",", $results);
         }
-        if ($string == false)
+        if ($string == false) {
             return $results;
-        else
+        } else {
             return $results_str;
+        }
     }
 }
