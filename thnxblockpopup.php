@@ -118,8 +118,9 @@ class ThnxBlockPopUp extends Module
             require_once(dirname(__FILE__).$this->mysql_files_url);
             if (isset($querys) && !empty($querys)) {
                 foreach ($querys as $query) {
-                    if (!Db::getInstance()->Execute($query,false))
+                    if (!Db::getInstance()->Execute($query, false)) {
                         return false;
+                    }
                 }
             }
         }
@@ -132,8 +133,9 @@ class ThnxBlockPopUp extends Module
             require_once(dirname(__FILE__).$this->mysql_files_url);
             if (isset($querys_u) && !empty($querys_u)) {
                 foreach ($querys_u as $query_u) {
-                    if (!Db::getInstance()->Execute($query_u,false))
+                    if (!Db::getInstance()->Execute($query_u, false)) {
                         return false;
+                    }
                 }
             }
         }
@@ -151,7 +153,7 @@ class ThnxBlockPopUp extends Module
                     $tabobj->delete();
                 }
             }
-        } 
+        }
         $save_tab_id = (int)Tab::getIdFromClassName("Adminthnxthemedashboard");
         if ($save_tab_id != 0) {
             $count = Tab::getNbTabs($save_tab_id);
@@ -214,19 +216,18 @@ class ThnxBlockPopUp extends Module
     }
     public function _prepareHook()
     {
-            $this->newsletterRegistration();
-            if (empty($this->error)) {
-                return true;
-            } else {
-                return false;
-            }
+        $this->newsletterRegistration();
+        if (empty($this->error)) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public function newsletterRegistration()
     {
         if (empty($_POST['email']) || !Validate::isEmail($_POST['email'])) {
             return $this->error = $this->l('Invalid email address.');
-        }
-        else if ($_POST['action'] == '1') {
+        } else if ($_POST['action'] == '1') {
             $register_status = $this->isNewsletterRegistered($_POST['email']);
             if ($register_status < 1) {
                 return $this->error = $this->l('This email address is not registered.');
@@ -235,9 +236,7 @@ class ThnxBlockPopUp extends Module
                 return $this->error = $this->l('An error occurred while attempting to unsubscribe.');
             }
             return $this->valid = $this->l('Unsubscription successful.');
-        }
-        /* Subscription */
-        else if ($_POST['action'] == '0') {
+        } else if ($_POST['action'] == '0') {
             $register_status = $this->isNewsletterRegistered($_POST['email']);
             if ($register_status > 0) {
                 return $this->error = $this->l('This email address is already registered.');
@@ -293,7 +292,7 @@ class ThnxBlockPopUp extends Module
                 AND id_shop = '.$this->context->shop->id;
 
         if (!$registered = Db::getInstance()->getRow($sql)) {
-            return self::GUEST_NOT_REGISTERED; 
+            return self::GUEST_NOT_REGISTERED;
         }
         if ($registered['newsletter'] == '1') {
             return self::CUSTOMER_REGISTERED;
@@ -394,9 +393,9 @@ class ThnxBlockPopUp extends Module
         $id_customer = (int)$this->context->cart->id_customer;
         $id_guest = (int)$this->context->cart->id_guest;
         if ($id_customer != 0) {
-            $id = 'c_'.$id_customer;        
+            $id = 'c_'.$id_customer;
         } else {
-            $id = 'g_'.$id_guest;       
+            $id = 'g_'.$id_guest;
         }
         // end
         $i = 0;
@@ -411,12 +410,12 @@ class ThnxBlockPopUp extends Module
         $this->context->smarty->assign(array('results' => $results));
         return $this->fetch('module:'.$this->name.'/views/templates/front/thnxblockpopup.tpl');
     }
-    public static function PageException($exceptions = NULL)
+    public static function PageException($exceptions = null)
     {
-        if ($exceptions == NULL) {
+        if ($exceptions == null) {
             return false;
         }
-        $exceptions = explode(",",$exceptions);
+        $exceptions = explode(",", $exceptions);
         $page_name = Context::getContext()->controller->php_self;
         $this_arr = array();
         $this_arr[] = 'all_page';
@@ -435,8 +434,7 @@ class ThnxBlockPopUp extends Module
                 WHERE cp.`id_product` = '.(int)$id_product;
             $prd_catresults = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($prd_cat_sql);
             if (isset($prd_catresults) && !empty($prd_catresults)) {
-                foreach ($prd_catresults as $prd_catresult)
-                {
+                foreach ($prd_catresults as $prd_catresult) {
                     $this_arr[] = 'prdcat_'.$prd_catresult['id'];
                 }
             }
@@ -471,15 +469,18 @@ class ThnxBlockPopUp extends Module
         }
         if (isset($this_arr)) {
             foreach ($this_arr as $this_arr_val) {
-                if (in_array($this_arr_val,$exceptions))
+                if (in_array($this_arr_val, $exceptions)) {
                     return true;
+                }
             }
         }
         return false;
     }
-    public static function isEmptyFileContet($path = null) {
-        if ($path == null)
+    public static function isEmptyFileContet($path = null)
+    {
+        if ($path == null) {
             return false;
+        }
         if (file_exists($path)) {
             $content = Tools::file_get_contents($path);
             if (empty($content)) {
@@ -511,12 +512,12 @@ class ThnxBlockPopUp extends Module
                         if (isset($css_file['load_theme']) && ($css_file['load_theme'] == true)) {
                             $theme_file_src = 'themes/'.$theme_name.'/assets/css/'.$css_file['src'];
                             if (self::isEmptyFileContet($root_path.$theme_file_src)) {
-                                $this->context->controller->registerStylesheet($css_file['key'], $theme_file_src , ['media' => $media, 'priority' => $priority]);
+                                $this->context->controller->registerStylesheet($css_file['key'], $theme_file_src, ['media' => $media, 'priority' => $priority]);
                             }
                         } else {
                             $module_file_src = 'modules/'.$this->name.'/css/'.$css_file['src'];
                             if (self::isEmptyFileContet($root_path.$module_file_src)) {
-                                $this->context->controller->registerStylesheet($css_file['key'], $module_file_src , ['media' => $media, 'priority' => $priority]);
+                                $this->context->controller->registerStylesheet($css_file['key'], $module_file_src, ['media' => $media, 'priority' => $priority]);
                             }
                         }
                     }
@@ -545,12 +546,12 @@ class ThnxBlockPopUp extends Module
                         if (isset($js_file['load_theme']) && ($js_file['load_theme'] == true)) {
                             $theme_file_src = 'themes/'.$theme_name.'/assets/js/'.$js_file['src'];
                             if (self::isEmptyFileContet($root_path.$theme_file_src)) {
-                                $this->context->controller->registerJavascript($js_file['key'], $theme_file_src , ['position' => $position, 'priority' => $priority]);
+                                $this->context->controller->registerJavascript($js_file['key'], $theme_file_src, ['position' => $position, 'priority' => $priority]);
                             }
                         } else {
                             $module_file_src = 'modules/'.$this->name.'/js/'.$js_file['src'];
                             if (self::isEmptyFileContet($root_path.$module_file_src)) {
-                                $this->context->controller->registerJavascript($js_file['key'], $module_file_src , ['position' => $position, 'priority' => $priority]);
+                                $this->context->controller->registerJavascript($js_file['key'], $module_file_src, ['position' => $position, 'priority' => $priority]);
                             }
                         }
                     }
@@ -621,20 +622,19 @@ You certain will love it',
             $languages = Language::getLanguages(false);
             $i = 1;
             foreach ($dummy_datas as $valu) {
-            $sqldumi2 = "INSERT INTO "._DB_PREFIX_."thnxblckpopuptbl(`popuptype`,`layout_style`,`product_item`,`height`,`width`,`image`,`pages`,`fromdate`,`todate`,`starttime`,`staytime`,`iscustomer`,`isguest`,`active`,`position`)VALUES('".$valu['popuptype']."','".$valu['layout_style']."','".$valu['product_item']."','".$valu['height']."','".$valu['width']."','".$valu['image']."','".$valu['pages']."','".$valu['fromdate']."','".$valu['todate']."','".$valu['starttime']."','".$valu['staytime']."',".(int)$valu['iscustomer'].",".(int)$valu['isguest'].",".(int)$valu['active'].",".(int)$valu['position'].");";
-                    Db::getInstance()->execute($sqldumi2,false);
+                $sqldumi2 = "INSERT INTO "._DB_PREFIX_."thnxblckpopuptbl(`popuptype`,`layout_style`,`product_item`,`height`,`width`,`image`,`pages`,`fromdate`,`todate`,`starttime`,`staytime`,`iscustomer`,`isguest`,`active`,`position`)VALUES('".$valu['popuptype']."','".$valu['layout_style']."','".$valu['product_item']."','".$valu['height']."','".$valu['width']."','".$valu['image']."','".$valu['pages']."','".$valu['fromdate']."','".$valu['todate']."','".$valu['starttime']."','".$valu['staytime']."',".(int)$valu['iscustomer'].",".(int)$valu['isguest'].",".(int)$valu['active'].",".(int)$valu['position'].");";
+                    Db::getInstance()->execute($sqldumi2, false);
                     // Start Lang
-                foreach ($languages as $language)
-                {
+                foreach ($languages as $language) {
                     $sqldumi = "INSERT INTO "._DB_PREFIX_."thnxblckpopuptbl_lang(id_thnxblckpopuptbl,id_lang,title,subtitle,description)VALUES(".(int)$i.",".(int)$language['id_lang'].",'".$valu['title']."','".$valu['subtitle']."','".$valu['description']."');";
-                    Db::getInstance()->execute($sqldumi,false);
+                    Db::getInstance()->execute($sqldumi, false);
                 }
                     // End Lang
                     // Start shop
                 $damisqs1 = "INSERT INTO "._DB_PREFIX_."thnxblckpopuptbl_shop(id_thnxblckpopuptbl,id_shop)VALUES(".$i.",".$id_shop.");";
-                Db::getInstance()->execute($damisqs1,false); 
+                Db::getInstance()->execute($damisqs1, false);
                     // End shop
-            $i = $i + 1;    
+                $i = $i + 1;
             }
         }
         return true;
