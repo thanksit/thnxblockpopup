@@ -195,9 +195,9 @@ class AdminblockpopupController extends ModuleAdminController
         if (isset($results) && !empty($results)) {
             $i = 0;
             foreach ($results as $result) {
-              $image_type_val[$i]['id'] = $result['name'];
-              $image_type_val[$i]['name'] = ucwords(str_replace("_", " ", $result['name']));
-              $i++;
+                $image_type_val[$i]['id'] = $result['name'];
+                $image_type_val[$i]['name'] = ucwords(str_replace("_", " ", $result['name']));
+                $i++;
             }
         }
         return $image_type_val;
@@ -505,13 +505,13 @@ class AdminblockpopupController extends ModuleAdminController
       $blockpopupclass = new blockpopupclass($id_thnxblckpopuptbl);
         if (Validate::isLoadedObject($blockpopupclass)) {
             if (isset($position) && $blockpopupclass->updatePosition($way, $position)) {
-              Hook::exec('action'.$this->className.'Update');
-              die(true);
+                Hook::exec('action'.$this->className.'Update');
+                die(true);
             } else {
                     die('{"hasError" : true, errors : "Can not update blockpopupclass position"}');
             }
         } else {
                 die('{"hasError" : true, "errors" : "This blockpopupclass can not be loaded"}');
-            }
+        }
     }
 }
