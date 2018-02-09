@@ -1,7 +1,10 @@
 <?php
-class AdminblockpopupController extends ModuleAdminController {
 
-    public function __construct() {
+class AdminblockpopupController extends ModuleAdminController
+{
+
+    public function __construct()
+    {
         $this->table = 'thnxblckpopuptbl';
         $this->className = 'blockpopupclass';
         $this->lang = true;
@@ -12,8 +15,9 @@ class AdminblockpopupController extends ModuleAdminController {
         $this->allow_export = false;
         $this->_defaultOrderWay = 'DESC';
         $this->bootstrap = true;
-            if(Shop::isFeatureActive())
+        if (Shop::isFeatureActive()) {
             Shop::addTableAssociation($this->table, array('type' => 'shop'));
+        }
             parent::__construct();
         $this->fields_list = array(
             'id_thnxblckpopuptbl' => array(
@@ -52,16 +56,17 @@ class AdminblockpopupController extends ModuleAdminController {
     public function init()
     {
         parent::init();
-        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'thnxblckpopuptbl_shop sbp ON a.id_thnxblckpopuptbl=sbp.id_thnxblckpopuptbl && sbp.id_shop IN('.implode(',',Shop::getContextListShopID()).')';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'thnxblckpopuptbl_shop sbp ON a.id_thnxblckpopuptbl=sbp.id_thnxblckpopuptbl && sbp.id_shop IN('.implode(',', Shop::getContextListShopID()).')';
         $this->_select = 'sbp.id_shop';
         $this->_defaultOrderBy = 'a.position';
         $this->_defaultOrderWay = 'DESC';
-        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
-        $this->_group = 'GROUP BY a.id_thnxblckpopuptbl';
+        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
+            $this->_group = 'GROUP BY a.id_thnxblckpopuptbl';
+        }
         $this->_select = 'a.position position';
     }
     public function setMedia()
-    {          
+    {
         parent::setMedia();
         $this->addJqueryUi('ui.widget');
         $this->addJqueryPlugin('tagify');
@@ -77,129 +82,137 @@ class AdminblockpopupController extends ModuleAdminController {
                 WHERE pl.`id_lang` = '.(int)$id_lang.' ORDER BY pl.`name`';
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         $id_lang = Context::getContext()->language->id;
-        $categories =  Category::getCategories($id_lang,true,false);
+        $categories =  Category::getCategories($id_lang, true, false);
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
-        if(isset($controllers))
+        if (isset($controllers)) {
             ksort($controllers);
+        }
         $Manufacturers =  Manufacturer::getManufacturers();
         $Suppliers =  Supplier::getSuppliers();
         $rslt = array();
         $rslt[0]['id'] = 'all_page';
         $rslt[0]['name'] = 'All Pages';
         $i = 1;
-        if(isset($controllers))
-            foreach($controllers as $r => $v){
+        if (isset($controllers)) {
+            foreach ($controllers as $r => $v) {
                 $rslt[$i]['id'] = $r;
                 $rslt[$i]['name'] = 'Page : '.ucwords($r);
                 $i++;
             }
-        if(isset($Manufacturers))
-            foreach($Manufacturers as $r){
+        }
+        if (isset($Manufacturers)) {
+            foreach ($Manufacturers as $r) {
                 $rslt[$i]['id'] = 'man_'.$r['id_manufacturer'];
                 $rslt[$i]['name'] = 'Manufacturer : '.$r['name'];
                 $i++;
             }
-        if(isset($Suppliers))
-            foreach($Suppliers as $r){
+        }
+        if (isset($Suppliers)) {
+            foreach ($Suppliers as $r) {
                 $rslt[$i]['id'] = 'sup_'.$r['id_supplier'];
                 $rslt[$i]['name'] = 'Supplier : '.$r['name'];
                 $i++;
             }
-        if(isset($categories))
-            foreach($categories as $cats){
+        }
+        if (isset($categories)) {
+            foreach ($categories as $cats) {
                 $rslt[$i]['id'] = 'cat_'.$cats['id_category'];
                 $rslt[$i]['name'] = 'Category : '.$cats['name'];
                 $i++;
             }
-        if(isset($products))
-            foreach($products as $r){
+        }
+        if (isset($products)) {
+            foreach ($products as $r) {
                 $rslt[$i]['id'] = 'prd_'.$r['id_product'];
                 $rslt[$i]['name'] = 'Product : '. $r['name'];
                 $i++;
             }
-        if(isset($categories))
-            foreach($categories as $cats){
+        }
+        if (isset($categories)) {
+            foreach ($categories as $cats) {
                 $rslt[$i]['id'] = 'prdcat_'.$cats['id_category'];
                 $rslt[$i]['name'] = 'Category Product: '.$cats['name'];
                 $i++;
             }
-        if(isset($Manufacturers))
-            foreach($Manufacturers as $r){
+        }
+        if (isset($Manufacturers)) {
+            foreach ($Manufacturers as $r) {
                 $rslt[$i]['id'] = 'prdman_'.$r['id_manufacturer'];
                 $rslt[$i]['name'] = 'Manufacturer Product : '.$r['name'];
                 $i++;
             }
-        if(isset($Suppliers))
-            foreach($Suppliers as $r){
+        }
+        if (isset($Suppliers)) {
+            foreach ($Suppliers as $r) {
                 $rslt[$i]['id'] = 'prdsup_'.$r['id_supplier'];
                 $rslt[$i]['name'] = 'Supplier Product : '.$r['name'];
                 $i++;
             }
+        }
         return $rslt;
     }
-	public static function order_by_val()
+    public static function order_by_val()
     {
-    	$order_by_val = array(
-    			array(
-    				'id' => 'id_product',
-    				'name' => 'Product ID'
-    			),
-    			array(
-    				'id' => 'price',
-    				'name' => 'Price'
-    			),
-    			array(
-    				'id' => 'date_add',
-    				'name' => 'Created Date'
-    			),
-    			array(
-    				'id' => 'date_upd',
-    				'name' => 'Update Date'
-    			)
-    		);
-    	return $order_by_val;
+        $order_by_val = array(
+                array(
+                    'id' => 'id_product',
+                    'name' => 'Product ID'
+                ),
+                array(
+                    'id' => 'price',
+                    'name' => 'Price'
+                ),
+                array(
+                    'id' => 'date_add',
+                    'name' => 'Created Date'
+                ),
+                array(
+                    'id' => 'date_upd',
+                    'name' => 'Update Date'
+                )
+            );
+        return $order_by_val;
     }
     public static function order_way_val()
     {
-    	$order_way_val = array(
-    			array(
-    				'id' => 'ASC',
-    				'name' => 'Assending'
-    			),
-    			array(
-    				'id' => 'DESC',
-    				'name' => 'Desending'
-    			),
-    		);
-    	return $order_way_val;
+        $order_way_val = array(
+                array(
+                    'id' => 'ASC',
+                    'name' => 'Assending'
+                ),
+                array(
+                    'id' => 'DESC',
+                    'name' => 'Desending'
+                ),
+            );
+        return $order_way_val;
     }
     public static function image_type_val()
     {
-    	$image_type_val = array();
-		$sql = 'SELECT * FROM `'._DB_PREFIX_.'image_type` WHERE `products` = 1 ORDER BY `name` ASC';
-		$results = Db::getInstance()->executeS($sql);
-		if(isset($results) && !empty($results)){
-			$i = 0;
-			foreach($results as $result)
-			{
-			  $image_type_val[$i]['id'] = $result['name'];
-			  $image_type_val[$i]['name'] = ucwords(str_replace("_"," ",$result['name']));
-			  $i++;
-			}
-		}
-    	return $image_type_val;
+        $image_type_val = array();
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'image_type` WHERE `products` = 1 ORDER BY `name` ASC';
+        $results = Db::getInstance()->executeS($sql);
+        if (isset($results) && !empty($results)) {
+            $i = 0;
+            foreach ($results as $result) {
+                $image_type_val[$i]['id'] = $result['name'];
+                $image_type_val[$i]['name'] = ucwords(str_replace("_", " ", $result['name']));
+                $i++;
+            }
+        }
+        return $image_type_val;
     }
     public static function layout_style_val()
     {
         $layout_style_val = array();
         // $theme_path =  _PS_THEME_DIR_.'modules/thnxblockpopup/views/templates/front/layout/';
         // $mod_path =  _PS_MODULE_DIR_.'thnxblockpopup/views/templates/front/layout/';
-        // if(file_exists($theme_path.'default.tpl')){
+        // if (file_exists($theme_path.'default.tpl')) {
         //     $file_lists = array_diff(scandir($theme_path), array('..', '.'));
-        // }else{
-    	   //  $file_lists = array_diff(scandir($mod_path), array('..', '.'));
+        // } else {
+           //  $file_lists = array_diff(scandir($mod_path), array('..', '.'));
         // }
-        // if(isset($file_lists) && !empty($file_lists)){
+        // if (isset($file_lists) && !empty($file_lists)) {
         //     $i = 0;
         //     foreach ($file_lists as $key => $value) {
         $layout_style_val[0]['id'] = "general";
@@ -209,25 +222,25 @@ class AdminblockpopupController extends ModuleAdminController {
         //         $i++;
         //     }
         // }
-    	return $layout_style_val;
+        return $layout_style_val;
     }
     public static function slider_style_val()
     {
-    	$slider_style_val = array(
-			array(
-				'id' => 'general',
-				'name' => 'General'
-			),
-			array(
-				'id' => 'slider',
-				'name' => 'Slider'
-			),
-			array(
-				'id' => 'carousel',
-				'name' => 'Carousel'
-			),
-		);
-    	return $slider_style_val;
+        $slider_style_val = array(
+            array(
+                'id' => 'general',
+                'name' => 'General'
+            ),
+            array(
+                'id' => 'slider',
+                'name' => 'Slider'
+            ),
+            array(
+                'id' => 'carousel',
+                'name' => 'Carousel'
+            ),
+        );
+        return $slider_style_val;
     }
     public function renderForm()
     {
@@ -239,29 +252,29 @@ class AdminblockpopupController extends ModuleAdminController {
         $popuptype[] = array('id' => 'newsletter','name' => 'Newsletter');
         $popuptype[] = array('id' => 'custom','name' => 'Custom');
         $bpdc = new blockpopupclass();
-		$order_by_val = self::order_by_val();
-		$order_way_val = self::order_way_val();
-		$image_type_val = self::image_type_val();
-		$layout_style_val = self::layout_style_val();
-		$slider_style_val = self::slider_style_val();
-        if(Tools::getvalue('id_thnxblckpopuptbl')){
+        $order_by_val = self::order_by_val();
+        $order_way_val = self::order_way_val();
+        $image_type_val = self::image_type_val();
+        $layout_style_val = self::layout_style_val();
+        $slider_style_val = self::slider_style_val();
+        if (Tools::getvalue('id_thnxblckpopuptbl')) {
             $clsobj = new blockpopupclass(Tools::getvalue('id_thnxblckpopuptbl'));
             $product_item_defvalues = $clsobj->product_item;
             $thnximage = $clsobj->image;
-        }else{
+        } else {
             $product_item_defvalues = '';
             $thnximage = '';
         }
 
-        if(isset($thnximage) && !empty($thnximage) && file_exists($init_path.$thnximage)){
-        	$thnximage_src = '<img src="'.$init_url.$thnximage.'" style="width:150px;height:auto;">';
+        if (isset($thnximage) && !empty($thnximage) && file_exists($init_path.$thnximage)) {
+            $thnximage_src = '<img src="'.$init_url.$thnximage.'" style="width:150px;height:auto;">';
         }
         $this->fields_form = array(
             'legend' => array(
-          		'title' => $this->l('Display Products'),
+                'title' => $this->l('Display Products'),
             ),
             'input' => array(
-            	array(
+                array(
                     'type' => 'text',
                     'label' => $this->l('Title'),
                     'name' => 'title',
@@ -298,8 +311,8 @@ class AdminblockpopupController extends ModuleAdminController {
                     'name' => 'snt_selectchange',
                     'hideclass' => 'selecttwotypeclass',
                     'dependency' => array(
-                    	'custom' => 'description',
-                    	)
+                        'custom' => 'description',
+                        )
                 ),
                 array(
                     'type' => 'select',
@@ -375,17 +388,17 @@ class AdminblockpopupController extends ModuleAdminController {
                     'is_bool' => true,
                     'values' => array(
                         array(
-	                        'id' => 'iscustomer',
-	                        'value' => 1,
-	                        'label' => $this->l('Enabled')
+                            'id' => 'iscustomer',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
                         ),
                         array(
-	                        'id' => 'iscustomer',
-	                        'value' => 0,
-	                        'label' => $this->l('Disabled')
+                            'id' => 'iscustomer',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
                         )
                     )
-               	),
+                ),
                 array(
                     'type' => 'switch',
                     'label' => $this->l('Guest Can Show This PopUp.'),
@@ -431,14 +444,16 @@ class AdminblockpopupController extends ModuleAdminController {
                 'class' => 'button'
             )
         );
-        if(Shop::isFeatureActive())
-			$this->fields_form['input'][] = array(
-				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
-				'name' => 'checkBoxShopAsso',
-			);
-        if(!($blockpopupclass = $this->loadObject(true)))
+        if (Shop::isFeatureActive()) {
+            $this->fields_form['input'][] = array(
+                'type' => 'shop',
+                'label' => $this->l('Shop association:'),
+                'name' => 'checkBoxShopAsso',
+            );
+        }
+        if (!($blockpopupclass = $this->loadObject(true))) {
             return;
+        }
         $this->fields_form['submit'] = array(
             'title' => $this->l('Save   '),
             'class' => 'button'
@@ -447,57 +462,56 @@ class AdminblockpopupController extends ModuleAdminController {
     }
     public function renderList()
     {
-        if(isset($this->_filter) && trim($this->_filter) == '')
+        if (isset($this->_filter) && trim($this->_filter) == '') {
             $this->_filter = $this->original_filter;
+        }
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         return parent::renderList();
     }
-    public function initToolbar(){
+    public function initToolbar()
+    {
           parent::initToolbar();
     }
     public function processPosition()
     {
-        if($this->tabAccess['edit'] !== '1')
+        if ($this->tabAccess['edit'] !== '1') {
             $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        else if(!Validate::isLoadedObject($object = new blockpopupclass((int)Tools::getValue($this->identifier, Tools::getValue('id_thnxblckpopuptbl', 1)))))
-        $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
-        $this->table.'</b> '.Tools::displayError('(cannot load object)');
-        if(!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-        $this->errors[] = Tools::displayError('Failed to update the position.');
-        else
-        {
+        } else if (!Validate::isLoadedObject($object = new blockpopupclass((int)Tools::getValue($this->identifier, Tools::getValue('id_thnxblckpopuptbl', 1))))) {
+            $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
+            $this->table.'</b> '.Tools::displayError('(cannot load object)');
+        }
+        if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
+            $this->errors[] = Tools::displayError('Failed to update the position.');
+        } else {
             $object->regenerateEntireNtree();
             Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_thnxblckpopuptbl = (int)Tools::getValue($this->identifier)) ? ('&'.$this->identifier.'='.$id_thnxblckpopuptbl) : '').'&token='.Tools::getAdminTokenLite('Adminblockpopup'));
         }
     }
     public function ajaxProcessUpdatePositions()
     {
-      $id_thnxblckpopuptbl = (int)(Tools::getValue('id'));
-      $way = (int)(Tools::getValue('way'));
-      $positions = Tools::getValue($this->table);
-      if (is_array($positions))
-        foreach ($positions as $key => $value)
-        {
-          $pos = explode('_', $value);
-          if ((isset($pos[1]) && isset($pos[2])) && ($pos[2] == $id_thnxblckpopuptbl))
-          {
-            $position = $key + 1;
-            break;
-          }
+        $id_thnxblckpopuptbl = (int)(Tools::getValue('id'));
+        $way = (int)(Tools::getValue('way'));
+        $positions = Tools::getValue($this->table);
+        if (is_array($positions)) {
+            foreach ($positions as $key => $value) {
+                $pos = explode('_', $value);
+                if ((isset($pos[1]) && isset($pos[2])) && ($pos[2] == $id_thnxblckpopuptbl)) {
+                    $position = $key + 1;
+                    break;
+                }
+            }
         }
-      $blockpopupclass = new blockpopupclass($id_thnxblckpopuptbl);
-      if (Validate::isLoadedObject($blockpopupclass))
-      {
-        if (isset($position) && $blockpopupclass->updatePosition($way, $position))
-        {
-          Hook::exec('action'.$this->className.'Update');
-          die(true);
+        $blockpopupclass = new blockpopupclass($id_thnxblckpopuptbl);
+        if (Validate::isLoadedObject($blockpopupclass)) {
+            if (isset($position) && $blockpopupclass->updatePosition($way, $position)) {
+                Hook::exec('action'.$this->className.'Update');
+                die(true);
+            } else {
+                    die('{"hasError" : true, errors : "Can not update blockpopupclass position"}');
+            }
+        } else {
+                die('{"hasError" : true, "errors" : "This blockpopupclass can not be loaded"}');
         }
-        else
-          die('{"hasError" : true, errors : "Can not update blockpopupclass position"}');
-      }
-      else
-        die('{"hasError" : true, "errors" : "This blockpopupclass can not be loaded"}');
     }
 }
