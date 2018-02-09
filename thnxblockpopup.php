@@ -376,9 +376,11 @@ class ThnxBlockPopUp extends Module
     public function sendVerificationEmail($email, $token)
     {
         $verif_url = Context::getContext()->link->getModuleLink(
-            'ps_emailsubscription', 'verification', array(
-                'token' => $token,
-            )
+            'ps_emailsubscription',
+            'verification',
+                        array(
+                            'token' => $token,
+                        )
         );
 
         return Mail::Send($this->context->language->id, 'thnxpopnewsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, $this->context->shop->id);
